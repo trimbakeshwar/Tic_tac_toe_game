@@ -13,3 +13,5 @@ do
 done
 }
 reseting
+playerOne=X
+playerTwo=O
