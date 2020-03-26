@@ -92,9 +92,9 @@ do
 		checkEmpty $player $rowPosition $columnPosition
 		checkWin $player
 	else
-		read -p "enter row position" rowPosition
-		read -p "enter column position" columnPosition
-		checkEmpty $player $rowPosition $columnPosition
-		checkWin $player
+		position=$((RANDOM%9))
+		rowPosition=$((position/3))
+		columnPosition=$((position%3))
+      checkEmpty $player $rowPosition $columnPosition
 	fi
 done
