@@ -80,6 +80,24 @@ function checkWin(){
 		exit
 	fi
 }
+
+function checkICanWinThenPlay(){
+for (( r=0; r<$ROW; r++ ))
+do
+   for (( c=0; c<$COLUMN; c++ ))
+   do
+      if [[ ${bord[$r,$c]} == " " ]]
+		then
+         bord[$r,$c]=$1
+         checkWin $1
+         if [[ $win -eq 0 ]]
+			then 
+             bord[$r,$c]=" "
+			fi
+		fi
+   done
+done
+}
 resetingBord
 tossAndAssignSymbol
 displayBord
