@@ -13,5 +13,12 @@ do
 done
 }
 reseting
-playerOne=X
-playerTwo=O
+function toss(){
+	toss=((RANDOM%2))
+	case $toss in 
+		1)
+			player=X ;;
+		2)
+			player=O ;;
+	esac
+}
