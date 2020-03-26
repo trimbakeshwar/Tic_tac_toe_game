@@ -70,7 +70,7 @@ function changePlayer(){
 	fi
 }
 
-function checkICanWinThenPlay(){
+function checkICanWinThenPlayAndBlock(){
 	flag=1
 	for (( r=0; r<$ROW; r++ ))
 	do
@@ -119,13 +119,38 @@ function checkEmpty(){
 	fi
 }
 
-function availableCorner(){
+function availableCornerCenterAndSide(){
+	if [ $flag -eq 1 ]
+	then
+		for (( i=0;i<$ROW;$((i+2)) ))
+		do
+			for (( j=0;j<$COLUMN;$((j+2)) ))
+			do
+				if [[ ${bord[$i,$j]} == " " ]]
+				then
+					bord[$i,$j]=$player
+					displayBord
+					flag=0
+					break
+				fi
+			done
+			if [ $flag -eq 0 ]
+			then
+				break
+			fi
+		done
+	fi
 
-if [ $flag -eq 1 ]
-then
-	for (( i=0;i<$ROW;$((i+2)) ))
+	if [ $flag -eq 1 ]
+	then
+		bord[1,1]=$player
+		flag=0
+	fi
+	if [ $flag -eq 1 ]
+	then
+	for (( i=0;i<$ROW;i++ ))
 	do
-		for (( j=0;j<$COLUMN;$((j+2)) ))
+		for (( j=0;j<$COLUMN;j++ ))
 		do
 			if [[ ${bord[$i,$j]} == " " ]]
 			then
@@ -135,18 +160,10 @@ then
 				break
 			fi
 		done
-		if [ $flag -eq 0 ]
-		then
-			break
-		fi
 	done
-fi
-if [ $flag -eq 1 ]
-then
-	bord[1,1]=$player
-	flag=0
-fi
+	fi
 }
+
 
 resetingBord
 tossAndAssignSymbol
@@ -160,9 +177,9 @@ do
 		checkEmpty $player $rowPosition $columnPosition
 	 else
 		otherPlayer="x"
-		checkICanWinThenPlay $player
-		checkICanWinThenPlay $otherPlayer
-		availableCorner  $player
+		checkICanWinThenPlayAndBlock $player
+		checkICanWinThenPlayAndBlock $otherPlayer
+		availableCornerCenterAndSide $player
 		if [ $flag -eq 1 ]
 		then
 			position=$((RANDOM%9))
