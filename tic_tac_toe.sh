@@ -119,6 +119,30 @@ function checkEmpty(){
 	fi
 }
 
+function availableCorner(){
+
+if [ $flag -eq 1 ]
+then
+	for (( i=0;i<$ROW;$((i+2)) ))
+	do
+		for (( j=0;j<$COLUMN;$((j+2)) ))
+		do
+			if [[ ${bord[$i,$j]} == " " ]]
+			then
+				bord[$i,$j]=$player
+				displayBord
+				flag=0
+				break
+			fi
+		done
+		if [ $flag -eq 0 ]
+		then
+			break
+		fi
+	done
+fi
+}
+
 resetingBord
 tossAndAssignSymbol
 displayBord
@@ -133,6 +157,7 @@ do
 		otherPlayer="x"
 		checkICanWinThenPlay $player
 		checkICanWinThenPlay $otherPlayer
+		availableCorner  $player
 		if [ $flag -eq 1 ]
 		then
 			position=$((RANDOM%9))
