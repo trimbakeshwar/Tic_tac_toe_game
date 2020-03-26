@@ -22,3 +22,16 @@ function toss(){
 			player=O ;;
 	esac
 }
+function displayBord(){
+	for (( i=0; i<$ROW; i++ ))
+	do
+			echo "---+---+---+"
+		for (( j=0; j<$COLUMN; j++ ))
+		do
+			echo -e " ${bord[$i,$j]} |\c"
+   	done
+		echo
+	done
+	echo "---+---+---+"
+
+}
