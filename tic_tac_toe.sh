@@ -141,6 +141,11 @@ then
 		fi
 	done
 fi
+if [ $flag -eq 1 ]
+then
+	bord[1,1]=$player
+	flag=0
+fi
 }
 
 resetingBord
@@ -175,5 +180,5 @@ fi
 done
 if [[ $win == 0 ]]
 then
-echo "match tie"
+	echo "match tie"
 fi
