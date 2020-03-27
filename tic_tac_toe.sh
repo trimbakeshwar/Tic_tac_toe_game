@@ -50,7 +50,7 @@ function checkWin(){
       elif [[ ${bord[$((i-i)),$i]} == $1 && ${bord[$((i+1-i)),$i]} == $1 &&  ${bord[$((i+2-i)),$i]} == $1 ]]
       then
          win=1
-      elif [[ $i -eq 0 && ${bord[$i,$i]} == $1 && ${bord[$((i+1)),$((i+1))]} == $1 && ${bord[$((i+1)),$((i+1))]} == $1 ]]
+      elif [[ $i -eq 0 && ${bord[$i,$i]} == $1 && ${bord[$((i+1)),$((i+1))]} == $1 && ${bord[$((i+2)),$((i+2))]} == $1 ]]
       then
          win=1
       elif [[ ${bord[0,2]} == $1 && ${bord[1,1]} == $1 && ${bord[2,0]} == $1 ]]
@@ -70,42 +70,6 @@ function changePlayer(){
 	fi
 }
 
-function checkICanWinThenPlayAndBlock(){
-	flag=1
-	for (( r=0; r<$ROW; r++ ))
-	do
-   	for (( c=0; c<$COLUMN; c++ ))
-   	do
-      	if [[ ${bord[$r,$c]} == " " ]]
-      	then
-         	bord[$r,$c]=$1
-         	checkWin $1
-         	if [ $win -eq 0 ]
-         	then
-            	 bord[$r,$c]=" "
-         	elif [[ $win -eq 1 && ${bord[$r,$c]} == $player ]]
-         	then
-            	displayBord
-            	echo "$player win "
-            exit
- 				elif [ $win -eq 1 ]
-         	then
-            	bord[$r,$c]=$player
-            	displayBord
-            	win=0
-            	flag=0
-            	((countOfMoves++))
-            	break
-         	fi
-      	fi
-   	done
-	if [ $flag -eq 0 ]
-	then
-   	break
-	fi 
-	done
-}
-
 function checkEmpty(){
 	if [[ ${bord[$2,$3]} == " " ]]
 	then
@@ -120,16 +84,18 @@ function checkEmpty(){
 }
 
 function availableCornerCenterAndSide(){
+
 	if [ $flag -eq 1 ]
 	then
-		for (( i=0;i<$ROW;$((i+2)) ))
+		for (( row=0; row<$ROW; row=$(( row+2 )) ))
 		do
-			for (( j=0;j<$COLUMN;$((j+2)) ))
+			for (( column=0; column<$COLUMN; column=$(( column+2 )) ))
 			do
-				if [[ ${bord[$i,$j]} == " " ]]
+				if [[ ${bord[$row,$column]} == " " ]]
 				then
-					bord[$i,$j]=$player
+					bord[$row,$column]=$player
 					displayBord
+#					 countOfMoves=$((countOfMoves+1))
 					flag=0
 					break
 				fi
@@ -144,24 +110,60 @@ function availableCornerCenterAndSide(){
 	if [ $flag -eq 1 ]
 	then
 		bord[1,1]=$player
+		displayBord
 		flag=0
 	fi
 	if [ $flag -eq 1 ]
 	then
-	for (( i=0;i<$ROW;i++ ))
+	for (( row=0;row<$ROW;row++ ))
 	do
-		for (( j=0;j<$COLUMN;j++ ))
+		for (( column=0;column<$COLUMN;column++ ))
 		do
-			if [[ ${bord[$i,$j]} == " " ]]
+			if [[ ${bord[$row,$column]} == " " ]]
 			then
-				bord[$i,$j]=$player
+				bord[$row,$column]=$player
 				displayBord
 				flag=0
 				break
 			fi
 		done
+	if [ $flag -eq 0 ]
+	then
+		break
+	fi
 	done
 	fi
+}
+function checkICanWinThenPlayAndBlock(){
+	flag=1
+   for (( r=0; r<$ROW; r++ ))
+   do
+      for (( c=0; c<$COLUMN; c++ ))
+      do
+         if [[ ${bord[$r,$c]} == " " ]]
+         then
+            bord[$r,$c]=$1
+            checkWin $1
+            if [ $win -eq 0 ]
+            then
+                bord[$r,$c]=" "
+            elif [[ $win -eq 1 && ${bord[$r,$c]} == $player ]]
+            then
+               displayBord
+               echo "$player win !"
+            exit
+            elif [ $win -eq 1 ]
+            then
+               bord[$r,$c]=$player
+               displayBord
+               win=0
+               flag=0
+               ((countOfMoves++))
+               break
+            fi
+         fi
+      done 
+   done
 }
 
 
