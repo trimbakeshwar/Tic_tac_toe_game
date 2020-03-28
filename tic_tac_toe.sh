@@ -3,9 +3,10 @@ echo "welcome to tic_tac_toe"
 declare -A bord
 ROW=3
 COLUMN=3
-countOfMoves=0
-computerPlayer="o"
-totalNumberOfMoves=$((ROW*COLUMN))
+COUNTOFMOVES=0
+COMPUTERPLAYER="o"
+TOTALNUMBEROFMOVES=$((ROW*COLUMN))
+#reset the bord
 function resetingBord(){
 	for (( i=0; i<$ROW; i++ ))
 	do
@@ -15,18 +16,19 @@ function resetingBord(){
 		done
 	done
 }
-
+#toss for who play first
 function tossAndAssignSymbol(){
 	toss=$((RANDOM%2))
 	case $toss in
 		1)
 			player=x ;;
 		0)
-			player=$computerPlayer ;;
+			player=$COMPUTERPLAYER ;;
 	esac
 	echo $player
 }
 
+#display the bord 
 function displayBord(){
 	for (( i=0; i<$ROW; i++ ))
 	do
@@ -34,12 +36,12 @@ function displayBord(){
 		for (( j=0; j<$COLUMN; j++ ))
 		do
 			printf " ${bord[$i,$j]} |"
-   	done
+		done
 		echo
 	done
 	echo "---+---+---+"
 }
-
+# winning conditions
 function checkWin(){
    win=0
    for (( i=0; i<$ROW; i++ ))
@@ -60,7 +62,7 @@ function checkWin(){
 	done
 }
 
-
+#after evry moves change the player
 function changePlayer(){
 	if [[ $player == x ]]
 	then
@@ -69,7 +71,7 @@ function changePlayer(){
 		player=x
 	fi
 }
-
+#check the any place empty
 function checkEmpty(){
 	if [[ ${bord[$2,$3]} == " " ]]
 	then
@@ -82,9 +84,9 @@ function checkEmpty(){
 		echo "invalid place"
 	fi
 }
-
+#check available corner center and sides are available and place the position
 function availableCornerCenterAndSide(){
-
+#check for available corner and place position when corner available
 	if [ $flag -eq 1 ]
 	then
 		for (( row=0; row<$ROW; row=$(( row+2 )) ))
@@ -95,7 +97,6 @@ function availableCornerCenterAndSide(){
 				then
 					bord[$row,$column]=$player
 					displayBord
-#					 countOfMoves=$((countOfMoves+1))
 					flag=0
 					break
 				fi
@@ -106,13 +107,14 @@ function availableCornerCenterAndSide(){
 			fi
 		done
 	fi
-
+#if corner not available then go for center
 	if [ $flag -eq 1 ]
 	then
 		bord[1,1]=$player
 		displayBord
 		flag=0
 	fi
+#if center or corner not available then take any available position
 	if [ $flag -eq 1 ]
 	then
 	for (( row=0;row<$ROW;row++ ))
@@ -134,6 +136,7 @@ function availableCornerCenterAndSide(){
 	done
 	fi
 }
+#check i can win if no then block other user for win
 function checkICanWinThenPlayAndBlock(){
 	flag=1
    for (( r=0; r<$ROW; r++ ))
@@ -158,7 +161,7 @@ function checkICanWinThenPlayAndBlock(){
                displayBord
                win=0
                flag=0
-               ((countOfMoves++))
+               ((COUNTOFMOVES++))
                break
             fi
          fi
@@ -170,7 +173,7 @@ function checkICanWinThenPlayAndBlock(){
 resetingBord
 tossAndAssignSymbol
 displayBord
-while [ $countOfMoves -lt $totalNumberOfMoves ]
+while [ $COUNTOFMOVES -lt $TOTALNUMBEROFMOVES ]
 do
 	if [[ $player == x ]]
 	then
@@ -178,9 +181,9 @@ do
 		read -p "enter column position" columnPosition
 		checkEmpty $player $rowPosition $columnPosition
 	 else
-		otherPlayer="x"
+		OTHERPLAYER="x"
 		checkICanWinThenPlayAndBlock $player
-		checkICanWinThenPlayAndBlock $otherPlayer
+		checkICanWinThenPlayAndBlock $OTHERPLAYER
 		availableCornerCenterAndSide $player
 		if [ $flag -eq 1 ]
 		then
@@ -189,7 +192,7 @@ do
 			columnPosition=$((position%3))
 			checkEmpty $player $rowPosition $columnPosition
 		else
-			changePlayer $otherPlayer
+			changePlayer $OTHERPLAYER
 		fi
 	 fi
 if [[ $win == 1 ]]
